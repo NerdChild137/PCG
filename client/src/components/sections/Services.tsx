@@ -78,7 +78,7 @@ export default function Services() {
   const services = content?.services && content.services.length > 0 ? content.services : defaultServices;
 
   return (
-    <section id="expertise" className="py-20 bg-secondary/50">
+    <section id="services" className="py-20 bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Areas of Expertise</h2>
