@@ -52,15 +52,15 @@ export default function About() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            className="relative max-w-sm mx-auto lg:mx-0"
           >
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
               {/* Using the screenshot directly but styled nicely - in real app would crop the face */}
-              <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
+              <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden">
                 <img 
                   src={photo} 
                   alt="Demarcus Peters" 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover object-top" 
                 />
               </div>
             </div>
