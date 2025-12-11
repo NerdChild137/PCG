@@ -21,10 +21,10 @@ export default function About() {
             
             <div className="space-y-6 text-gray-600 leading-relaxed">
               <p>
-                Demarcus Peters leads the Civil Rights Compliance and Small Business Outreach team at Espousal Strategies, bringing more than two decades of experience advancing access and opportunity in public infrastructure. He is a nationally respected expert in workforce development, supplier diversity, and compliance for megaprojects.
+                Demarcus Peters leads the Civil Rights Compliance and Small Business Outreach team at Peters Consulting Group, bringing more than two decades of experience advancing access and opportunity in public infrastructure. He is a nationally respected expert in workforce development, supplier diversity, and compliance for megaprojects.
               </p>
               <p>
-                Prior to joining Espousal Strategies, Demarcus held senior leadership roles across the country, including with the City and County of Denver, LA Metro, MARTA, and Cincinnati Metro. He provided compliance oversight on major infrastructure projects totaling more than $1.6 billion.
+                Prior to founding Peters Consulting Group, Demarcus held senior leadership roles across the country, including with the City and County of Denver, LA Metro, MARTA, and Cincinnati Metro. He provided compliance oversight on major infrastructure projects totaling more than $1.6 billion.
               </p>
               <p>
                 Demarcus holds a J.D. from Texas Southern University and a B.J. in Public Relations from the University of Texas at Austin. He is a SHRM-Certified Professional and longtime member of COMTO and APTA.

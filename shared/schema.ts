@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, jsonb, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -9,10 +9,36 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
 });
 
+export const siteContent = pgTable("site_content", {
+  id: integer("id").primaryKey().default(1),
+  heroHeadline: text("hero_headline").notNull().default("Advancing Access & Opportunity in Infrastructure"),
+  heroSubtext: text("hero_subtext").notNull().default("Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects across the nation."),
+  aboutText: jsonb("about_text").notNull().$type<string[]>().default([]),
+  services: jsonb("services").notNull().$type<{title: string, description: string}[]>().default([]),
+});
+
+export const siteTheme = pgTable("site_theme", {
+  id: integer("id").primaryKey().default(1),
+  primaryColor: text("primary_color").notNull().default("215 28% 17%"),
+  accentColor: text("accent_color").notNull().default("180 100% 35%"),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
 });
 
+export const insertSiteContentSchema = createInsertSchema(siteContent).omit({
+  id: true,
+});
+
+export const insertSiteThemeSchema = createInsertSchema(siteTheme).omit({
+  id: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type SiteContent = typeof siteContent.$inferSelect;
+export type InsertSiteContent = z.infer<typeof insertSiteContentSchema>;
+export type SiteTheme = typeof siteTheme.$inferSelect;
+export type InsertSiteTheme = z.infer<typeof insertSiteThemeSchema>;
