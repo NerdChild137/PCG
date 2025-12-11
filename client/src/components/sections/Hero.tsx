@@ -1,9 +1,18 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { SiteContent } from "@shared/schema";
 import heroImage from "@assets/stock_images/modern_public_transi_6a152490.jpg";
 
 export default function Hero() {
+  const { data: content } = useQuery<SiteContent>({
+    queryKey: ["/api/content"],
+  });
+
+  const headline = content?.heroHeadline || "Advancing Access & Opportunity in Infrastructure";
+  const subtext = content?.heroSubtext || "Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects across the nation.";
+
   return (
     <div className="relative h-screen min-h-[600px] w-full overflow-hidden">
       {/* Background Image with Overlay */}
@@ -25,15 +34,11 @@ export default function Hero() {
           <span className="inline-block py-1 px-3 rounded-full bg-accent/20 text-accent border border-accent/30 text-sm font-semibold mb-6 backdrop-blur-sm">
             Peters Consulting Group
           </span>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-6 leading-tight">
-            Advancing Access & <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-200">
-              Opportunity
-            </span>
-            {" "}in Infrastructure
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-6 leading-tight" data-testid="text-hero-headline">
+            {headline}
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
-            Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects across the nation.
+          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed" data-testid="text-hero-subtext">
+            {subtext}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">

@@ -1,73 +1,119 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Lock, Loader2, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, Save, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { SiteContent, SiteTheme } from "@shared/schema";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function Admin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Mock login delay
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsLoggedIn(true);
+  const { data: content, isLoading: contentLoading } = useQuery<SiteContent>({
+    queryKey: ["/api/content"],
+  });
+
+  const { data: theme, isLoading: themeLoading } = useQuery<SiteTheme>({
+    queryKey: ["/api/theme"],
+  });
+
+  const [heroHeadline, setHeroHeadline] = useState("");
+  const [heroSubtext, setHeroSubtext] = useState("");
+  const [aboutText, setAboutText] = useState<string[]>([]);
+  const [services, setServices] = useState<{ title: string; description: string }[]>([]);
+  const [primaryColor, setPrimaryColor] = useState("");
+  const [accentColor, setAccentColor] = useState("");
+
+  useEffect(() => {
+    if (content) {
+      setHeroHeadline(content.heroHeadline);
+      setHeroSubtext(content.heroSubtext);
+      setAboutText(content.aboutText || []);
+      setServices(content.services || []);
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (theme) {
+      setPrimaryColor(theme.primaryColor);
+      setAccentColor(theme.accentColor);
+    }
+  }, [theme]);
+
+  const updateContentMutation = useMutation({
+    mutationFn: async (data: Partial<SiteContent>) => {
+      const res = await apiRequest("PUT", "/api/content", data);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/content"] });
       toast({
-        title: "Welcome back",
-        description: "You have successfully logged in to the admin dashboard.",
+        title: "Content updated",
+        description: "Your changes have been saved successfully.",
       });
-    }, 1500);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update content. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateThemeMutation = useMutation({
+    mutationFn: async (data: Partial<SiteTheme>) => {
+      const res = await apiRequest("PUT", "/api/theme", data);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/theme"] });
+      toast({
+        title: "Theme updated",
+        description: "Your color changes have been saved successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update theme. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSaveContent = () => {
+    updateContentMutation.mutate({
+      heroHeadline,
+      heroSubtext,
+      aboutText,
+      services,
+    });
   };
 
-  if (!isLoggedIn) {
+  const handleSaveTheme = () => {
+    updateThemeMutation.mutate({
+      primaryColor,
+      accentColor,
+    });
+  };
+
+  if (contentLoading || themeLoading) {
     return (
-      <div className="min-h-screen bg-secondary flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-xl border-none">
-          <CardHeader className="space-y-1 text-center">
-            <div className="mx-auto w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
-              <Lock className="h-6 w-6 text-white" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-primary">Admin Login</CardTitle>
-            <CardDescription>Enter your credentials to access the editor</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="admin@pcgtransit.com" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required />
-              </div>
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Sign In
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter className="justify-center">
-            <Link href="/">
-              <span className="text-sm text-gray-500 hover:text-primary flex items-center gap-1 cursor-pointer">
-                <ArrowLeft className="h-3 w-3" /> Back to Website
-              </span>
-            </Link>
-          </CardFooter>
-        </Card>
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  // Admin Dashboard View (Mock)
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Admin Header */}
@@ -77,8 +123,8 @@ export default function Admin() {
           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">Live Mode</span>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => window.open("/", "_blank")}>View Site</Button>
-          <Button variant="destructive" size="sm" onClick={() => setIsLoggedIn(false)}>Log Out</Button>
+          <Button variant="outline" size="sm" onClick={() => window.open("/", "_blank")} data-testid="button-view-site">View Site</Button>
+          <Button variant="destructive" size="sm" onClick={() => logoutMutation.mutate()} data-testid="button-logout">Log Out</Button>
         </div>
       </header>
 
@@ -98,16 +144,70 @@ export default function Admin() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Hero Headline</Label>
-                  <Input defaultValue="Advancing Access & Opportunity in Infrastructure" />
+                  <Label htmlFor="hero-headline">Hero Headline</Label>
+                  <Input 
+                    id="hero-headline"
+                    value={heroHeadline}
+                    onChange={(e) => setHeroHeadline(e.target.value)}
+                    data-testid="input-hero-headline"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>Hero Subtext</Label>
-                  <textarea className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" defaultValue="Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects across the nation." />
+                  <Label htmlFor="hero-subtext">Hero Subtext</Label>
+                  <Textarea
+                    id="hero-subtext"
+                    value={heroSubtext}
+                    onChange={(e) => setHeroSubtext(e.target.value)}
+                    className="min-h-[80px]"
+                    data-testid="input-hero-subtext"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>About Section Paragraphs</Label>
+                  {aboutText.map((paragraph, i) => (
+                    <div key={i} className="flex gap-2">
+                      <Textarea
+                        value={paragraph}
+                        onChange={(e) => {
+                          const newAboutText = [...aboutText];
+                          newAboutText[i] = e.target.value;
+                          setAboutText(newAboutText);
+                        }}
+                        className="min-h-[100px]"
+                        data-testid={`input-about-${i}`}
+                      />
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-red-500"
+                        onClick={() => setAboutText(aboutText.filter((_, idx) => idx !== i))}
+                        data-testid={`button-delete-about-${i}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full mt-2"
+                    onClick={() => setAboutText([...aboutText, ""])}
+                    data-testid="button-add-about"
+                  >
+                    <Plus className="mr-2 h-4 w-4" /> Add Paragraph
+                  </Button>
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button className="bg-primary"><Save className="mr-2 h-4 w-4" /> Save Changes</Button>
+                <Button 
+                  className="bg-primary" 
+                  onClick={handleSaveContent}
+                  disabled={updateContentMutation.isPending}
+                  data-testid="button-save-content"
+                >
+                  {updateContentMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Save Changes
+                </Button>
               </CardFooter>
             </Card>
 
@@ -118,18 +218,53 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    "Contract Compliance",
-                    "EEO / Human Resources",
-                    "Supplier Diversity",
-                    "Workforce Diversity"
-                  ].map((service, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Input defaultValue={service} />
-                      <Button variant="ghost" size="icon" className="text-red-500"><Trash2 className="h-4 w-4" /></Button>
+                  {services.map((service, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 space-y-2">
+                          <Input 
+                            placeholder="Service Title"
+                            value={service.title}
+                            onChange={(e) => {
+                              const newServices = [...services];
+                              newServices[i].title = e.target.value;
+                              setServices(newServices);
+                            }}
+                            data-testid={`input-service-title-${i}`}
+                          />
+                          <Textarea
+                            placeholder="Service Description"
+                            value={service.description}
+                            onChange={(e) => {
+                              const newServices = [...services];
+                              newServices[i].description = e.target.value;
+                              setServices(newServices);
+                            }}
+                            className="min-h-[60px]"
+                            data-testid={`input-service-description-${i}`}
+                          />
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-500"
+                          onClick={() => setServices(services.filter((_, idx) => idx !== i))}
+                          data-testid={`button-delete-service-${i}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
-                  <Button variant="outline" size="sm" className="w-full mt-2"><Plus className="mr-2 h-4 w-4" /> Add Service</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full mt-2"
+                    onClick={() => setServices([...services, { title: "", description: "" }])}
+                    data-testid="button-add-service"
+                  >
+                    <Plus className="mr-2 h-4 w-4" /> Add Service
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -139,28 +274,50 @@ export default function Admin() {
              <Card>
               <CardHeader>
                 <CardTitle>Theme Settings</CardTitle>
-                <CardDescription>Customize the look and feel of your website</CardDescription>
+                <CardDescription>Customize the look and feel of your website (HSL format: hue saturation lightness)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                  <div className="grid grid-cols-2 gap-4">
                    <div className="space-y-2">
-                     <Label>Primary Color (Navy)</Label>
+                     <Label htmlFor="primary-color">Primary Color (Navy)</Label>
                      <div className="flex gap-2">
-                       <div className="w-10 h-10 rounded border bg-[#1f3a53]" />
-                       <Input defaultValue="#1F3A53" />
+                       <div className="w-10 h-10 rounded border" style={{ backgroundColor: `hsl(${primaryColor})` }} />
+                       <Input 
+                         id="primary-color"
+                         placeholder="215 28% 17%"
+                         value={primaryColor}
+                         onChange={(e) => setPrimaryColor(e.target.value)}
+                         data-testid="input-primary-color"
+                       />
                      </div>
+                     <p className="text-xs text-gray-500">Example: 215 28% 17% for dark navy</p>
                    </div>
                    <div className="space-y-2">
-                     <Label>Accent Color (Cyan)</Label>
+                     <Label htmlFor="accent-color">Accent Color (Cyan)</Label>
                      <div className="flex gap-2">
-                       <div className="w-10 h-10 rounded border bg-[#00B2B2]" />
-                       <Input defaultValue="#00B2B2" />
+                       <div className="w-10 h-10 rounded border" style={{ backgroundColor: `hsl(${accentColor})` }} />
+                       <Input 
+                         id="accent-color"
+                         placeholder="180 100% 35%"
+                         value={accentColor}
+                         onChange={(e) => setAccentColor(e.target.value)}
+                         data-testid="input-accent-color"
+                       />
                      </div>
+                     <p className="text-xs text-gray-500">Example: 180 100% 35% for cyan</p>
                    </div>
                  </div>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button className="bg-primary"><Save className="mr-2 h-4 w-4" /> Update Theme</Button>
+                <Button 
+                  className="bg-primary"
+                  onClick={handleSaveTheme}
+                  disabled={updateThemeMutation.isPending}
+                  data-testid="button-save-theme"
+                >
+                  {updateThemeMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Update Theme
+                </Button>
               </CardFooter>
             </Card>
           </TabsContent>

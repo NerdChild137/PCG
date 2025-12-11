@@ -21,14 +21,14 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getSiteContent(): Promise<SiteContent | undefined>;
-  updateSiteContent(content: InsertSiteContent): Promise<SiteContent>;
+  updateSiteContent(content: Partial<InsertSiteContent>): Promise<SiteContent>;
   getSiteTheme(): Promise<SiteTheme | undefined>;
   updateSiteTheme(theme: InsertSiteTheme): Promise<SiteTheme>;
-  sessionStore: session.SessionStore;
+  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: session.Store;
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 
@@ -64,10 +64,11 @@ export class DatabaseStorage implements IStorage {
     return content;
   }
 
-  async updateSiteContent(contentData: InsertSiteContent): Promise<SiteContent> {
+  async updateSiteContent(contentData: Partial<InsertSiteContent>): Promise<SiteContent> {
+    const updateData: any = { ...contentData };
     const [content] = await db
       .update(siteContent)
-      .set(contentData)
+      .set(updateData)
       .where(eq(siteContent.id, 1))
       .returning();
     return content;

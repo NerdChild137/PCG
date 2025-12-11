@@ -1,8 +1,22 @@
 import { motion } from "framer-motion";
 import photo from "@assets/Peters_Demarcus_edited.jpg_1765482002517.avif";
 import { CheckCircle2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { SiteContent } from "@shared/schema";
 
 export default function About() {
+  const { data: content } = useQuery<SiteContent>({
+    queryKey: ["/api/content"],
+  });
+
+  const defaultAboutText = [
+    "Demarcus Peters leads the Civil Rights Compliance and Small Business Outreach team at Peters Consulting Group, bringing more than two decades of experience advancing access and opportunity in public infrastructure. He is a nationally respected expert in workforce development, supplier diversity, and compliance for megaprojects.",
+    "Prior to founding Peters Consulting Group, Demarcus held senior leadership roles across the country, including with the City and County of Denver, LA Metro, MARTA, and Cincinnati Metro. He provided compliance oversight on major infrastructure projects totaling more than $1.6 billion.",
+    "Demarcus holds a J.D. from Texas Southern University and a B.J. in Public Relations from the University of Texas at Austin. He is a SHRM-Certified Professional and longtime member of COMTO and APTA."
+  ];
+
+  const aboutText = content?.aboutText && content.aboutText.length > 0 ? content.aboutText : defaultAboutText;
+
   return (
     <section id="about" className="py-20 md:py-32 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
@@ -19,16 +33,10 @@ export default function About() {
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-6">Demarcus Peters</h2>
             <h3 className="text-xl text-primary/80 font-medium mb-8">Director of Civil Rights Compliance & Small Business Outreach</h3>
             
-            <div className="space-y-6 text-gray-600 leading-relaxed">
-              <p>
-                Demarcus Peters leads the Civil Rights Compliance and Small Business Outreach team at Peters Consulting Group, bringing more than two decades of experience advancing access and opportunity in public infrastructure. He is a nationally respected expert in workforce development, supplier diversity, and compliance for megaprojects.
-              </p>
-              <p>
-                Prior to founding Peters Consulting Group, Demarcus held senior leadership roles across the country, including with the City and County of Denver, LA Metro, MARTA, and Cincinnati Metro. He provided compliance oversight on major infrastructure projects totaling more than $1.6 billion.
-              </p>
-              <p>
-                Demarcus holds a J.D. from Texas Southern University and a B.J. in Public Relations from the University of Texas at Austin. He is a SHRM-Certified Professional and longtime member of COMTO and APTA.
-              </p>
+            <div className="space-y-6 text-gray-600 leading-relaxed" data-testid="text-about-content">
+              {aboutText.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </div>
 
             <div className="mt-8 pt-8 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
