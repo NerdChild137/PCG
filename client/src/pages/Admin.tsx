@@ -57,9 +57,9 @@ export default function Admin() {
           </CardContent>
           <CardFooter className="justify-center">
             <Link href="/">
-              <a className="text-sm text-gray-500 hover:text-primary flex items-center gap-1">
+              <span className="text-sm text-gray-500 hover:text-primary flex items-center gap-1 cursor-pointer">
                 <ArrowLeft className="h-3 w-3" /> Back to Website
-              </a>
+              </span>
             </Link>
           </CardFooter>
         </Card>

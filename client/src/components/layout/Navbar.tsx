@@ -39,14 +39,14 @@ export default function Navbar() {
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/">
-          <a className="flex items-center gap-2">
+          <div className="flex items-center gap-2 cursor-pointer">
              <div className="relative h-12 w-auto overflow-hidden rounded bg-slate-900/90 px-2 py-1">
                <img src={logo} alt="PCG Transit" className="h-full w-auto object-contain" />
              </div>
              <span className={`text-xl font-heading font-bold tracking-tight ${isScrolled ? "text-primary" : "text-white"}`}>
                PCG<span className="text-accent">transit</span>
              </span>
-          </a>
+          </div>
         </Link>
 
         {/* Desktop Nav */}

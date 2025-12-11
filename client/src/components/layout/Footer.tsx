@@ -43,10 +43,10 @@ export default function Footer() {
           </p>
           
           <Link href="/admin">
-            <a className="flex items-center gap-2 text-xs text-gray-600 hover:text-accent transition-colors">
+            <span className="flex items-center gap-2 text-xs text-gray-600 hover:text-accent transition-colors cursor-pointer">
               <Lock className="h-3 w-3" />
               Admin Login
-            </a>
+            </span>
           </Link>
         </div>
       </div>
