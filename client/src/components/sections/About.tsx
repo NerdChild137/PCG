@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import photo from "@assets/Screenshot_2025-12-11_at_10.39.22_AM_1765478397549.png";
+import photo from "@assets/Peters_Demarcus_edited.jpg_1765482002517.avif";
 import { CheckCircle2 } from "lucide-react";
 
 export default function About() {
@@ -60,8 +60,7 @@ export default function About() {
                 <img 
                   src={photo} 
                   alt="Demarcus Peters" 
-                  className="w-full h-full object-cover object-left-top scale-110" 
-                  style={{ objectPosition: "10% 20%" }} // Trying to center the face from the screenshot
+                  className="w-full h-full object-cover" 
                 />
               </div>
             </div>
