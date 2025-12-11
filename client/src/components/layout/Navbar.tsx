@@ -40,8 +40,8 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
-             <div className="relative h-16 w-auto overflow-hidden px-2 py-1">
-               <img src={logo} alt="PCG Transit" className="h-full w-auto object-contain" />
+             <div className="relative h-20 md:h-24 w-auto overflow-hidden px-2 py-1">
+               <img src={logo} alt="PCG Transit" className="h-full w-auto object-contain scale-110" />
              </div>
           </div>
         </Link>

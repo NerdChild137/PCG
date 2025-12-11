@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="mb-4">
-               <img src={logo} alt="PCG Transit" className="h-16 w-auto object-contain" />
+               <img src={logo} alt="PCG Transit" className="h-20 w-auto object-contain scale-110 origin-left" />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Peters Consulting Group provides expert guidance in Civil Rights Compliance, 
