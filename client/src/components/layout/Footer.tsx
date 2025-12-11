@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Lock } from "lucide-react";
+import logo from "@assets/20251211_1108_PCG_Logo_PNG_remix_01kc7czf48fpqresdtpjd7vz6g_1765482517059.png";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,9 +10,9 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-2xl font-heading font-bold mb-4">
-              PCG<span className="text-accent">transit</span>
-            </h3>
+            <div className="mb-4">
+               <img src={logo} alt="PCG Transit" className="h-16 w-auto object-contain" />
+            </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Peters Consulting Group provides expert guidance in Civil Rights Compliance, 
               Small Business Outreach, and Transit Consulting Services.

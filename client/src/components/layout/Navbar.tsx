@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import logo from "@assets/20251211_1108_PCG_Logo_PNG_remix_01kc7czf48fpqresdtpjd7vz6g_1765480589847.png";
+import logo from "@assets/20251211_1108_PCG_Logo_PNG_remix_01kc7czf48fpqresdtpjd7vz6g_1765482517059.png";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -40,12 +40,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
-             <div className="relative h-12 w-auto overflow-hidden rounded bg-slate-900/90 px-2 py-1">
+             <div className="relative h-16 w-auto overflow-hidden px-2 py-1">
                <img src={logo} alt="PCG Transit" className="h-full w-auto object-contain" />
              </div>
-             <span className={`text-xl font-heading font-bold tracking-tight ${isScrolled ? "text-primary" : "text-white"}`}>
-               PCG<span className="text-accent">transit</span>
-             </span>
           </div>
         </Link>
 
