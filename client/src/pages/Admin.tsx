@@ -217,7 +217,8 @@ export default function Admin() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>About Section Paragraphs</Label>
+                  <Label>Leadership Bio Paragraphs</Label>
+                  <p className="text-xs text-gray-500 mb-2">These paragraphs appear under the Leadership section with Demarcus Peters' photo</p>
                   {aboutText.map((paragraph, i) => (
                     <div key={i} className="flex gap-2">
                       <Textarea
@@ -248,7 +249,7 @@ export default function Admin() {
                     onClick={() => setAboutText([...aboutText, ""])}
                     data-testid="button-add-about"
                   >
-                    <Plus className="mr-2 h-4 w-4" /> Add Paragraph
+                    <Plus className="mr-2 h-4 w-4" /> Add Bio Paragraph
                   </Button>
                 </div>
               </CardContent>
