@@ -373,6 +373,17 @@ export default function Admin() {
                   </div>
                 </div>
               </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button 
+                  className="bg-primary" 
+                  onClick={handleSaveContent}
+                  disabled={updateContentMutation.isPending}
+                  data-testid="button-save-section-titles"
+                >
+                  {updateContentMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Save Changes
+                </Button>
+              </CardFooter>
             </Card>
 
             <Card>
@@ -431,6 +442,17 @@ export default function Admin() {
                   </Button>
                 </div>
               </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button 
+                  className="bg-primary" 
+                  onClick={handleSaveContent}
+                  disabled={updateContentMutation.isPending}
+                  data-testid="button-save-services"
+                >
+                  {updateContentMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Save Changes
+                </Button>
+              </CardFooter>
             </Card>
           </TabsContent>
 
