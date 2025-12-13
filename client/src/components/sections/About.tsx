@@ -29,9 +29,9 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h4 className="text-accent font-bold tracking-wider uppercase mb-2 text-sm">Leadership</h4>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-6">Demarcus Peters</h2>
-            <h3 className="text-xl text-primary/80 font-medium mb-8">Director of Civil Rights Compliance & Small Business Outreach</h3>
+            <h4 className="text-accent font-bold tracking-wider uppercase mb-2 text-sm">{content?.leadershipTitle || "Leadership"}</h4>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-6">{content?.leadershipSubtitle || "Demarcus Peters"}</h2>
+            <h3 className="text-xl text-primary/80 font-medium mb-8">{content?.leadershipRole || "Director of Civil Rights Compliance & Small Business Outreach"}</h3>
             
             <div className="space-y-6 text-gray-600 leading-relaxed" data-testid="text-about-content">
               {aboutText.map((paragraph, i) => (

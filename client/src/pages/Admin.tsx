@@ -36,6 +36,15 @@ export default function Admin() {
   const [primaryColor, setPrimaryColor] = useState("");
   const [accentColor, setAccentColor] = useState("");
   const [newResource, setNewResource] = useState({ title: "", description: "", imageUrl: "", linkUrl: "", linkText: "Learn More" });
+  const [leadershipTitle, setLeadershipTitle] = useState("");
+  const [leadershipSubtitle, setLeadershipSubtitle] = useState("");
+  const [leadershipRole, setLeadershipRole] = useState("");
+  const [expertiseTitle, setExpertiseTitle] = useState("");
+  const [expertiseDescription, setExpertiseDescription] = useState("");
+  const [transitTitle, setTransitTitle] = useState("");
+  const [contactTitle, setContactTitle] = useState("");
+  const [footerDescription, setFooterDescription] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
     if (content) {
@@ -43,6 +52,15 @@ export default function Admin() {
       setHeroSubtext(content.heroSubtext);
       setAboutText(content.aboutText || []);
       setServices(content.services || []);
+      setLeadershipTitle(content.leadershipTitle || "");
+      setLeadershipSubtitle(content.leadershipSubtitle || "");
+      setLeadershipRole(content.leadershipRole || "");
+      setExpertiseTitle(content.expertiseTitle || "");
+      setExpertiseDescription(content.expertiseDescription || "");
+      setTransitTitle(content.transitTitle || "");
+      setContactTitle(content.contactTitle || "");
+      setFooterDescription(content.footerDescription || "");
+      setLogoUrl(content.logoUrl || "");
     }
   }, [content]);
 
@@ -101,6 +119,15 @@ export default function Admin() {
       heroSubtext,
       aboutText,
       services,
+      leadershipTitle,
+      leadershipSubtitle,
+      leadershipRole,
+      expertiseTitle,
+      expertiseDescription,
+      transitTitle,
+      contactTitle,
+      footerDescription,
+      logoUrl: logoUrl || null,
     });
   };
 
@@ -236,6 +263,116 @@ export default function Admin() {
                   Save Changes
                 </Button>
               </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Section Titles</CardTitle>
+                <CardDescription>Edit section headers and descriptions</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm text-gray-700 border-b pb-2">Leadership Section</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Section Label</Label>
+                      <Input 
+                        value={leadershipTitle}
+                        onChange={(e) => setLeadershipTitle(e.target.value)}
+                        placeholder="Leadership"
+                        data-testid="input-leadership-title"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Name</Label>
+                      <Input 
+                        value={leadershipSubtitle}
+                        onChange={(e) => setLeadershipSubtitle(e.target.value)}
+                        placeholder="Demarcus Peters"
+                        data-testid="input-leadership-subtitle"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role/Title</Label>
+                    <Input 
+                      value={leadershipRole}
+                      onChange={(e) => setLeadershipRole(e.target.value)}
+                      placeholder="Director of Civil Rights Compliance"
+                      data-testid="input-leadership-role"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm text-gray-700 border-b pb-2">Areas of Expertise Section</h4>
+                  <div className="space-y-2">
+                    <Label>Section Title</Label>
+                    <Input 
+                      value={expertiseTitle}
+                      onChange={(e) => setExpertiseTitle(e.target.value)}
+                      placeholder="Areas of Expertise"
+                      data-testid="input-expertise-title"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Section Description</Label>
+                    <Textarea 
+                      value={expertiseDescription}
+                      onChange={(e) => setExpertiseDescription(e.target.value)}
+                      placeholder="We engage our core capabilities..."
+                      data-testid="input-expertise-description"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm text-gray-700 border-b pb-2">Other Sections</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Transit Section Title</Label>
+                      <Input 
+                        value={transitTitle}
+                        onChange={(e) => setTransitTitle(e.target.value)}
+                        placeholder="Transit Specific Practice"
+                        data-testid="input-transit-title"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Contact Section Title</Label>
+                      <Input 
+                        value={contactTitle}
+                        onChange={(e) => setContactTitle(e.target.value)}
+                        placeholder="Get in Touch"
+                        data-testid="input-contact-title"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm text-gray-700 border-b pb-2">Footer</h4>
+                  <div className="space-y-2">
+                    <Label>Footer Description</Label>
+                    <Textarea 
+                      value={footerDescription}
+                      onChange={(e) => setFooterDescription(e.target.value)}
+                      placeholder="Peters Consulting Group provides expert guidance..."
+                      data-testid="input-footer-description"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Custom Logo URL (optional)</Label>
+                    <Input 
+                      value={logoUrl}
+                      onChange={(e) => setLogoUrl(e.target.value)}
+                      placeholder="https://example.com/logo.png"
+                      data-testid="input-logo-url"
+                    />
+                    <p className="text-xs text-gray-500">Leave empty to use the default logo</p>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
 
             <Card>

@@ -81,9 +81,9 @@ export default function Services() {
     <section id="services" className="py-20 bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Areas of Expertise</h2>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">{content?.expertiseTitle || "Areas of Expertise"}</h2>
           <p className="text-gray-600">
-            We engage our core capabilities to deliver equitable outcomes for local communities and businesses.
+            {content?.expertiseDescription || "We engage our core capabilities to deliver equitable outcomes for local communities and businesses."}
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function Services() {
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
               <TrainFront className="h-8 w-8 text-accent" />
-              <h3 className="text-2xl md:text-3xl font-bold">Transit Specific Practice</h3>
+              <h3 className="text-2xl md:text-3xl font-bold">{content?.transitTitle || "Transit Specific Practice"}</h3>
             </div>
             
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

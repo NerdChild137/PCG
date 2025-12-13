@@ -1,7 +1,13 @@
 import { MapPin, Phone, Mail, Linkedin } from "lucide-react";
 import laImage from "@assets/stock_images/modern_los_angeles_s_26ee99cb.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { SiteContent } from "@shared/schema";
 
 export default function Contact() {
+  const { data: content } = useQuery<SiteContent>({
+    queryKey: ["/api/content"],
+  });
+
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -9,7 +15,7 @@ export default function Contact() {
           
           {/* Left: Contact Info */}
           <div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-8" data-testid="text-contact-title">Get in Touch</h2>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-8" data-testid="text-contact-title">{content?.contactTitle || "Get in Touch"}</h2>
             
             <div className="space-y-10">
               {/* Pacific Northwest */}

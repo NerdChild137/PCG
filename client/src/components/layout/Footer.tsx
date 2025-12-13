@@ -1,9 +1,17 @@
 import { Link } from "wouter";
 import { Lock, Linkedin } from "lucide-react";
-import logo from "@assets/20251211_1108_PCG_Logo_PNG_remix_01kc7czf48fpqresdtpjd7vz6g_1765482517059.png";
+import defaultLogo from "@assets/20251211_1108_PCG_Logo_PNG_remix_01kc7czf48fpqresdtpjd7vz6g_1765482517059.png";
+import { useQuery } from "@tanstack/react-query";
+import { SiteContent } from "@shared/schema";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { data: content } = useQuery<SiteContent>({
+    queryKey: ["/api/content"],
+  });
+
+  const logoSrc = content?.logoUrl || defaultLogo;
+  const footerDesc = content?.footerDescription || "Peters Consulting Group provides expert guidance in Small Business Outreach, Workforce Development, and Transit Consulting Services.";
 
   return (
     <footer className="bg-primary text-white py-12 border-t border-white/10">
@@ -11,11 +19,10 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="mb-4">
-               <img src={logo} alt="PCG Transit" className="h-20 w-auto object-contain scale-110 origin-left" />
+               <img src={logoSrc} alt="PCG Transit" className="h-20 w-auto object-contain scale-110 origin-left" />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-              Peters Consulting Group provides expert guidance in Small Business Outreach, 
-              Workforce Development, and Transit Consulting Services.
+              {footerDesc}
             </p>
             <a href="https://www.linkedin.com/in/demarcuspeters" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-4 text-accent hover:text-white transition-colors">
               <Linkedin className="h-5 w-5" /> LinkedIn

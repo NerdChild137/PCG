@@ -15,6 +15,15 @@ export const siteContent = pgTable("site_content", {
   heroSubtext: text("hero_subtext").notNull().default("Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects across the nation."),
   aboutText: jsonb("about_text").notNull().$type<string[]>().default([]),
   services: jsonb("services").notNull().$type<{title: string, description: string}[]>().default([]),
+  leadershipTitle: text("leadership_title").notNull().default("Leadership"),
+  leadershipSubtitle: text("leadership_subtitle").notNull().default("Demarcus Peters"),
+  leadershipRole: text("leadership_role").notNull().default("Director of Civil Rights Compliance & Small Business Outreach"),
+  expertiseTitle: text("expertise_title").notNull().default("Areas of Expertise"),
+  expertiseDescription: text("expertise_description").notNull().default("We engage our core capabilities to deliver equitable outcomes for local communities and businesses."),
+  transitTitle: text("transit_title").notNull().default("Transit Specific Practice"),
+  contactTitle: text("contact_title").notNull().default("Get in Touch"),
+  footerDescription: text("footer_description").notNull().default("Specializing in Civil Rights Compliance, Small Business Outreach, and Workforce Development for major transit projects."),
+  logoUrl: text("logo_url"),
 });
 
 export const siteTheme = pgTable("site_theme", {
