@@ -23,6 +23,15 @@ export const siteTheme = pgTable("site_theme", {
   accentColor: text("accent_color").notNull().default("180 100% 35%"),
 });
 
+export const resources = pgTable("resources", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  imageUrl: text("image_url"),
+  linkUrl: text("link_url"),
+  linkText: text("link_text").default("Learn More"),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -36,9 +45,15 @@ export const insertSiteThemeSchema = createInsertSchema(siteTheme).omit({
   id: true,
 });
 
+export const insertResourceSchema = createInsertSchema(resources).omit({
+  id: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type SiteContent = typeof siteContent.$inferSelect;
 export type InsertSiteContent = z.infer<typeof insertSiteContentSchema>;
 export type SiteTheme = typeof siteTheme.$inferSelect;
 export type InsertSiteTheme = z.infer<typeof insertSiteThemeSchema>;
+export type Resource = typeof resources.$inferSelect;
+export type InsertResource = z.infer<typeof insertResourceSchema>;

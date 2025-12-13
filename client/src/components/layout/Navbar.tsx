@@ -19,6 +19,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
+    { name: "Resources", href: "/resources", isPage: true },
     { name: "Contact", href: "#contact" },
   ];
 
@@ -48,15 +49,25 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <button
-              key={link.name}
-              onClick={() => scrollToSection(link.href)}
-              className={`text-sm font-medium transition-colors hover:text-accent ${
-                isScrolled ? "text-primary" : "text-white/90"
-              }`}
-            >
-              {link.name}
-            </button>
+            link.isPage ? (
+              <Link key={link.name} href={link.href}>
+                <span className={`text-sm font-medium transition-colors hover:text-accent cursor-pointer ${
+                  isScrolled ? "text-primary" : "text-white/90"
+                }`}>
+                  {link.name}
+                </span>
+              </Link>
+            ) : (
+              <button
+                key={link.name}
+                onClick={() => scrollToSection(link.href)}
+                className={`text-sm font-medium transition-colors hover:text-accent ${
+                  isScrolled ? "text-primary" : "text-white/90"
+                }`}
+              >
+                {link.name}
+              </button>
+            )
           ))}
           <Button 
             className="bg-accent hover:bg-accent/90 text-white font-bold"
@@ -77,13 +88,21 @@ export default function Navbar() {
             <SheetContent>
               <div className="flex flex-col gap-6 mt-10">
                 {navLinks.map((link) => (
-                  <button
-                    key={link.name}
-                    onClick={() => scrollToSection(link.href)}
-                    className="text-lg font-medium text-left hover:text-accent"
-                  >
-                    {link.name}
-                  </button>
+                  link.isPage ? (
+                    <Link key={link.name} href={link.href}>
+                      <span className="text-lg font-medium text-left hover:text-accent cursor-pointer block">
+                        {link.name}
+                      </span>
+                    </Link>
+                  ) : (
+                    <button
+                      key={link.name}
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-lg font-medium text-left hover:text-accent"
+                    >
+                      {link.name}
+                    </button>
+                  )
                 ))}
                 <Button className="w-full bg-accent hover:bg-accent/90">Get in Touch</Button>
               </div>

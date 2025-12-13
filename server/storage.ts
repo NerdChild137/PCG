@@ -5,9 +5,12 @@ import {
   type InsertSiteContent,
   type SiteTheme,
   type InsertSiteTheme,
+  type Resource,
+  type InsertResource,
   users,
   siteContent,
-  siteTheme
+  siteTheme,
+  resources
 } from "@shared/schema";
 import { db, pool } from "./db";
 import { eq } from "drizzle-orm";
@@ -24,6 +27,10 @@ export interface IStorage {
   updateSiteContent(content: Partial<InsertSiteContent>): Promise<SiteContent>;
   getSiteTheme(): Promise<SiteTheme | undefined>;
   updateSiteTheme(theme: InsertSiteTheme): Promise<SiteTheme>;
+  getResources(): Promise<Resource[]>;
+  createResource(resource: InsertResource): Promise<Resource>;
+  updateResource(id: number, resource: Partial<InsertResource>): Promise<Resource>;
+  deleteResource(id: number): Promise<void>;
   sessionStore: session.Store;
 }
 
@@ -90,6 +97,28 @@ export class DatabaseStorage implements IStorage {
       .where(eq(siteTheme.id, 1))
       .returning();
     return theme;
+  }
+
+  async getResources(): Promise<Resource[]> {
+    return await db.select().from(resources);
+  }
+
+  async createResource(resourceData: InsertResource): Promise<Resource> {
+    const [resource] = await db.insert(resources).values(resourceData).returning();
+    return resource;
+  }
+
+  async updateResource(id: number, resourceData: Partial<InsertResource>): Promise<Resource> {
+    const [resource] = await db
+      .update(resources)
+      .set(resourceData)
+      .where(eq(resources.id, id))
+      .returning();
+    return resource;
+  }
+
+  async deleteResource(id: number): Promise<void> {
+    await db.delete(resources).where(eq(resources.id, id));
   }
 }
 

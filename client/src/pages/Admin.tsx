@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { SiteContent, SiteTheme } from "@shared/schema";
+import { SiteContent, SiteTheme, Resource } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function Admin() {
@@ -25,12 +25,17 @@ export default function Admin() {
     queryKey: ["/api/theme"],
   });
 
+  const { data: resourcesList = [], isLoading: resourcesLoading } = useQuery<Resource[]>({
+    queryKey: ["/api/resources"],
+  });
+
   const [heroHeadline, setHeroHeadline] = useState("");
   const [heroSubtext, setHeroSubtext] = useState("");
   const [aboutText, setAboutText] = useState<string[]>([]);
   const [services, setServices] = useState<{ title: string; description: string }[]>([]);
   const [primaryColor, setPrimaryColor] = useState("");
   const [accentColor, setAccentColor] = useState("");
+  const [newResource, setNewResource] = useState({ title: "", description: "", imageUrl: "", linkUrl: "", linkText: "Learn More" });
 
   useEffect(() => {
     if (content) {
@@ -106,6 +111,28 @@ export default function Admin() {
     });
   };
 
+  const createResourceMutation = useMutation({
+    mutationFn: async (data: typeof newResource) => {
+      const res = await apiRequest("POST", "/api/resources", data);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/resources"] });
+      setNewResource({ title: "", description: "", imageUrl: "", linkUrl: "", linkText: "Learn More" });
+      toast({ title: "Resource added", description: "New resource has been created." });
+    },
+  });
+
+  const deleteResourceMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/resources/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/resources"] });
+      toast({ title: "Resource deleted" });
+    },
+  });
+
   if (contentLoading || themeLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -132,8 +159,8 @@ export default function Admin() {
         <Tabs defaultValue="content" className="max-w-4xl mx-auto">
           <TabsList className="mb-8">
             <TabsTrigger value="content">Content Editor</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
             <TabsTrigger value="styles">Styles & Colors</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="content" className="space-y-6">
@@ -266,6 +293,115 @@ export default function Admin() {
                     <Plus className="mr-2 h-4 w-4" /> Add Service
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="resources" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Add New Resource</CardTitle>
+                <CardDescription>Add resources with title, description, image, and link</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Title</Label>
+                    <Input 
+                      value={newResource.title}
+                      onChange={(e) => setNewResource({...newResource, title: e.target.value})}
+                      placeholder="Resource title"
+                      data-testid="input-new-resource-title"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Link Text</Label>
+                    <Input 
+                      value={newResource.linkText}
+                      onChange={(e) => setNewResource({...newResource, linkText: e.target.value})}
+                      placeholder="Learn More"
+                      data-testid="input-new-resource-link-text"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Description</Label>
+                  <Textarea
+                    value={newResource.description}
+                    onChange={(e) => setNewResource({...newResource, description: e.target.value})}
+                    placeholder="Resource description"
+                    data-testid="input-new-resource-description"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Image URL</Label>
+                    <Input 
+                      value={newResource.imageUrl}
+                      onChange={(e) => setNewResource({...newResource, imageUrl: e.target.value})}
+                      placeholder="https://example.com/image.jpg"
+                      data-testid="input-new-resource-image"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Link URL</Label>
+                    <Input 
+                      value={newResource.linkUrl}
+                      onChange={(e) => setNewResource({...newResource, linkUrl: e.target.value})}
+                      placeholder="https://example.com"
+                      data-testid="input-new-resource-link"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  onClick={() => createResourceMutation.mutate(newResource)}
+                  disabled={!newResource.title || !newResource.description || createResourceMutation.isPending}
+                  data-testid="button-add-resource"
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Add Resource
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Existing Resources</CardTitle>
+                <CardDescription>Manage your resources</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {resourcesList.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No resources yet. Add one above!</p>
+                ) : (
+                  <div className="space-y-4">
+                    {resourcesList.map((resource) => (
+                      <div key={resource.id} className="flex items-start gap-4 p-4 border rounded-lg" data-testid={`resource-item-${resource.id}`}>
+                        {resource.imageUrl && (
+                          <img src={resource.imageUrl} alt={resource.title} className="w-20 h-20 object-cover rounded" />
+                        )}
+                        <div className="flex-1">
+                          <h4 className="font-bold">{resource.title}</h4>
+                          <p className="text-sm text-gray-600">{resource.description}</p>
+                          {resource.linkUrl && (
+                            <a href={resource.linkUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:underline">
+                              {resource.linkText || "Learn More"}
+                            </a>
+                          )}
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-500"
+                          onClick={() => deleteResourceMutation.mutate(resource.id)}
+                          data-testid={`button-delete-resource-${resource.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

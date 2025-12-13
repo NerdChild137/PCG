@@ -56,5 +56,54 @@ export async function registerRoutes(
     }
   });
 
+  // Resources routes
+  app.get("/api/resources", async (req, res) => {
+    try {
+      const resourcesList = await storage.getResources();
+      res.json(resourcesList);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/resources", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    try {
+      const resource = await storage.createResource(req.body);
+      res.json(resource);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/resources/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    try {
+      const resource = await storage.updateResource(parseInt(req.params.id), req.body);
+      res.json(resource);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/resources/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    try {
+      await storage.deleteResource(parseInt(req.params.id));
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   return httpServer;
 }
